@@ -1,8 +1,3 @@
-#!/usr/bin/env python
-# -*- coding: utf-8 -*-
-
-"""ANIMESH BALA ANI"""
-
 # Import Modules
 import os
 import torch
