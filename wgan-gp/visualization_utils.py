@@ -4,7 +4,11 @@ import config
 import numpy as np
 import torch.optim as optim
 import matplotlib.pyplot as plt
+import os
 from models import Generator, Critic, initialize_weights
+import torchvision.transforms as transforms
+import torchvision.utils as vutils
+from PIL import Image
 
 
 def load_models(epoch):
@@ -34,20 +38,36 @@ def compute_gradient(epoch):
 
 
 def visualize(epoch, etas_size=10):
-    gradient, fake = compute_gradient(epoch)
+    for k in range(4):
+        gradient, fake = compute_gradient(epoch)
 
-    new = []
-
-    plt.figure()
-    plt.suptitle('Fake image', fontsize=20)
-    plt.imshow(fake[0].cpu().detach().permute(1, 2, 0))
-    for _ in range(etas_size):
-        eta = np.random.uniform(10 ** (-5), 0.001)
-        new_image = fake - torch.mul(gradient, eta)
-        new.append(new_image)
+        new = []
 
         plt.figure()
-        plt.suptitle(f'eta={eta}', fontsize=20)
-        plt.imshow(new_image[0].cpu().detach().permute(1, 2, 0))
+        plt.suptitle('Fake image', fontsize=20)
+        plt.imshow(fake[0].cpu().detach().permute(1, 2, 0))
+        etas = [0.001, 0.002, 0.006, 0.008, 0.01, 0.09, 0.1, 0.9]
+
+        for eta in etas:
+            # xx = np.logspace(1e-5, 1e5, etas_size)
+            # eta = np.random.uniform(10 ** (-5), 0.001)
+            new_image = fake - torch.mul(gradient, eta)
+            new.append(new_image)
+
+            plt.figure()
+            plt.suptitle(f'eta={eta}', fontsize=20)
+            plt.imshow(new_image[0].cpu().detach().permute(1, 2, 0))
+
+        transform_PIL = transforms.ToPILImage()
+
+        check_dirs()
+        for i, news in enumerate(new):
+            im = vutils.make_grid(torch.reshape(news[0], (3, 64, 64))[:64], padding=2, normalize=True)
+            plt.imshow(news[0].cpu().detach().permute(1, 2, 0))
+            transform_PIL(im).save(os.path.join(f'res/{k}/', str(epoch) + '_epoh_' + str(etas[i]) +
+                                                "_eta_image.png"))
 
 
+def check_dirs():
+    for i in range(4):
+        os.makedirs(f'res/{i}', exist_ok=True)
