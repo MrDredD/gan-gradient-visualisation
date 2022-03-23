@@ -7,5 +7,7 @@
 
 For the f-GAN there is only notebook wich is self-sufficient
 
+You can download data from [this repository](https://github.com/bchao1/Anime-Face-Dataset) or [here](https://www.kaggle.com/splcher/animefacedataset)
 
+You need to put images directory inside Dataset directory
 GTX 1070 were used for this project
