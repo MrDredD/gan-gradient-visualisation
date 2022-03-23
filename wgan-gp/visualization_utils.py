@@ -44,7 +44,7 @@ def visualize(epoch, etas_size=10):
         new = []
 
         plt.figure()
-        plt.suptitle('Fake image', fontsize=20)
+        plt.suptitle(f'Fake image at epoch {epoch}, {k+1}/4 ', fontsize=20)
         plt.imshow(fake[0].cpu().detach().permute(1, 2, 0))
         etas = [0.001, 0.002, 0.006, 0.008, 0.01, 0.09, 0.1, 0.9]
 
